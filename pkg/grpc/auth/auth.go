@@ -7,11 +7,12 @@ package auth
 import (
 	"context"
 	"fmt"
-	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
-	"github.com/onosproject/onos-lib-go/pkg/auth"
 	"strings"
 
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
+	"github.com/grpc-ecosystem/go-grpc-middleware/util/metautils"
+	"github.com/onosproject/onos-lib-go/pkg/auth"
+	"github.com/onosproject/onos-lib-go/pkg/logging"
 )
 
 const (
@@ -19,14 +20,17 @@ const (
 	ContextMetadataTokenKey = "bearer"
 )
 
+var log = logging.GetLogger("auth")
+
 // AuthenticationInterceptor an interceptor for authentication
 func AuthenticationInterceptor(ctx context.Context) (context.Context, error) {
+	log.Info("AuthenticationInterceptor++")
 	// Extract token from metadata in the context
 	tokenString, err := grpc_auth.AuthFromMD(ctx, ContextMetadataTokenKey)
 	if err != nil {
 		return nil, err
 	}
-
+	log.Infof("AuthenticationInterceptor,token=%s", tokenString)
 	// Authenticate the jwt token
 	jwtAuth := new(auth.JwtAuthenticator)
 	authClaims, err := jwtAuth.ParseAndValidate(tokenString)

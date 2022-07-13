@@ -109,6 +109,7 @@ func (j *JwtAuthenticator) ParseAndValidate(tokenString string) (jwt.MapClaims, 
 // 2) lookup the "keys" parameter and get keys from $OIDCServerURL/keys
 // The keys are in a public key format and are converted to RSA Public Keys
 func (j *JwtAuthenticator) refreshJwksKeys() error {
+	log.Infof("*********** refreshJwksKeys ************")
 	oidcURL := os.Getenv(OIDCServerURL)
 
 	client := new(http.Client)
@@ -116,6 +117,8 @@ func (j *JwtAuthenticator) refreshJwksKeys() error {
 	if err != nil {
 		return err
 	}
+	log.Infof("***********refreshJwksKeys, resOpenIDConfig info:- %s\n", resOpenIDConfig)
+	if resOpenIDConfig.Body != nil {
 	if resOpenIDConfig.Body != nil {
 		defer resOpenIDConfig.Body.Close()
 	}
@@ -123,6 +126,8 @@ func (j *JwtAuthenticator) refreshJwksKeys() error {
 	if readErr != nil {
 		return err
 	}
+	log.Infof("***********refreshJwksKeys, openIDConfigBody info:- %s\n", openIDConfigBody)
+
 	var openIDprovider ecoidc.Provider
 	jsonErr := json.Unmarshal(openIDConfigBody, &openIDprovider)
 	if jsonErr != nil {
@@ -132,6 +137,8 @@ func (j *JwtAuthenticator) refreshJwksKeys() error {
 	if err != nil {
 		return err
 	}
+	log.Infof("***********refreshJwksKeys, resOpenIDKeys info:- %s\n", resOpenIDKeys)
+
 	if resOpenIDKeys.Body != nil {
 		defer resOpenIDKeys.Body.Close()
 	}
@@ -139,6 +146,8 @@ func (j *JwtAuthenticator) refreshJwksKeys() error {
 	if readErr != nil {
 		return err
 	}
+	log.Infof("***********refreshJwksKeys, bodyOpenIDKeys info:- %s\n", bodyOpenIDKeys)
+
 	var jsonWebKeySet jose.JSONWebKeySet
 	if err := json.Unmarshal(bodyOpenIDKeys, &jsonWebKeySet); err != nil {
 		return err
