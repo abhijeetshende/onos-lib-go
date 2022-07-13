@@ -117,7 +117,7 @@ func (j *JwtAuthenticator) refreshJwksKeys() error {
 	if err != nil {
 		return err
 	}
-
+	log.Infof("refreshJwksKeys,oidcURL=%s", oidcURL)
 	if resOpenIDConfig.Body != nil {
 		defer resOpenIDConfig.Body.Close()
 	}
@@ -125,6 +125,7 @@ func (j *JwtAuthenticator) refreshJwksKeys() error {
 	if readErr != nil {
 		return err
 	}
+	log.Infof("refreshJwksKeys,openIDConfigBody=%s", openIDConfigBody)
 	var openIDprovider ecoidc.Provider
 	jsonErr := json.Unmarshal(openIDConfigBody, &openIDprovider)
 	if jsonErr != nil {
@@ -134,6 +135,7 @@ func (j *JwtAuthenticator) refreshJwksKeys() error {
 	if err != nil {
 		return err
 	}
+	log.Infof("refreshJwksKeys,resOpenIDKeys=%s", resOpenIDKeys)
 	if resOpenIDKeys.Body != nil {
 		defer resOpenIDKeys.Body.Close()
 	}
@@ -141,6 +143,7 @@ func (j *JwtAuthenticator) refreshJwksKeys() error {
 	if readErr != nil {
 		return err
 	}
+	log.Infof("refreshJwksKeys,bodyOpenIDKeys=%s", bodyOpenIDKeys)
 	var jsonWebKeySet jose.JSONWebKeySet
 	if err := json.Unmarshal(bodyOpenIDKeys, &jsonWebKeySet); err != nil {
 		return err
