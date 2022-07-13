@@ -109,7 +109,7 @@ func (j *JwtAuthenticator) ParseAndValidate(tokenString string) (jwt.MapClaims, 
 // 2) lookup the "keys" parameter and get keys from $OIDCServerURL/keys
 // The keys are in a public key format and are converted to RSA Public Keys
 func (j *JwtAuthenticator) refreshJwksKeys() error {
-	log.Infof("***********InSideAuthJwt_SMAL_************")
+	log.Infof("***********in side refreshJwksKeys************")
 	oidcURL := os.Getenv(OIDCServerURL)
 
 	client := new(http.Client)
